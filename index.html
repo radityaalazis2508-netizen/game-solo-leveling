@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling: Procedure Text Awakening</title>
+    <style>
+        /* --- DESAIN THEME SOLO LEVELING (DARK SYSTEM UI) --- */
+        :root {
+            --bg-dark: #0b0f19;       /* Hitam Deep Space */
+            --panel-dark: #161d30;    /* Biru Gelap Panel */
+            --system-blue: #00ffcc;   /* Cyan Neon Solo Leveling */
+            --system-purple: #8b5cf6; /* Ungu Shadow Monarch */
+            --text-light: #f3f4f6;    /* Putih Terang */
+            --text-gray: #9ca3af;     /* Abu-abu teks deskripsi */
+            --success-neon: #10b981;  /* Hijau Sukses */
+            --danger-neon: #ef4444;   /* Merah Gagal */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: var(--panel-dark);
+            border: 2px solid var(--system-blue);
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Hunter Status Bar */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed rgba(0, 255, 204, 0.3);
+        }
+
+        .hunter-badge {
+            background: linear-gradient(45deg, var(--system-blue), var(--system-purple));
+            color: var(--bg-dark);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .score-box {
+            font-weight: bold;
+            color: var(--system-blue);
+            font-size: 1.1rem;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            color: var(--system-blue);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            color: var(--system-purple);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        /* Neon System Buttons */
+        .btn {
+            background-color: transparent;
+            color: var(--system-blue);
+            border: 2px solid var(--system-blue);
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.1);
+        }
+
+        .btn:hover {
+            background-color: var(--system-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+
+        /* Quest Box / Dungeon Stage */
+        .text-box {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 20px;
+            font-style: italic;
+            border-left: 5px solid var(--system-purple);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Sortable List Level 2 */
+        .sortable-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .sortable-item {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .sortable-item:hover {
+            border-color: var(--system-blue);
+            background-color: rgba(0, 255, 204, 0.05);
+        }
+
+        .sortable-item.selected {
+            background-color: rgba(139, 92, 246, 0.2);
+            border-color: var(--system-purple);
+        }
+
+        /* Level 3 Word Display */
+        .word-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--system-blue);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: inline-block;
+            border: 2px dashed var(--system-purple);
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        /* System Feedback Popup */
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-weight: bold;
+            border: 1px solid transparent;
+        }
+
+        .feedback.success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-neon);
+            border-color: var(--success-neon);
+            display: block;
+        }
+
+        .feedback.danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-neon);
+            border-color: var(--danger-neon);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- System Hunter UI Header -->
+        <div id="game-header-ui" class="game-header" style="display: none;">
+            <div id="level-indicator" class="hunter-badge">RANK E (ZERO)</div>
+            <div class="score-box">MANA EXP: <span id="current-score">0</span></div>
+        </div>
+
+        <!-- 1. SYSTEM ACTIVATION (MAIN MENU) -->
+        <div id="screen-main" class="screen active">
+            <h1>[ SYSTEM ALERT ]</h1>
+            <p style="color: var(--text-gray);">Kamu terpilih sebagai Hunter terlemah (Rank E). Sebuah program misterius memaksamu mengikuti persidangan "Dungeon Teks Prosedur Kompleks Kelas 11". Selesaikan misi atau terjebak selamanya!</p>
+            <h2 style="color: var(--system-blue); font-size: 1.2rem; margin-bottom: 25px;">APAKAH KAMU AKAN MENERIMA QUEST KEBANGKITAN INI?</h2>
+            <button class="btn" onclick="startGame()">Terima Quest (Awakening)</button>
+        </div>
+
+        <!-- 2. QUEST 1: GATE OF STRUCTURE -->
+        <div id="screen-lvl1" class="screen">
+            <h2>[ QUEST 1: GATE OF STRUCTURE ]</h2>
+            <p>Analisis pecahan dokumen sihir di bawah ini. Tebak pecahan tersebut termasuk bagian dari struktur teks prosedur kompleks yang mana!</p>
+            <div class="text-box" id="lvl1-text">Memuat fragmen teks...</div>
+            <div class="options-grid">
+                <button class="btn" onclick="checkLvl1('Tujuan')">Tujuan</button>
+                <button class="btn" onclick="checkLvl1('Material')">Material</button>
+                <button class="btn" onclick="checkLvl1('Langkah-langkah')">Langkah-langkah</button>
+                <button class="btn" onclick="checkLvl1('Penutup')">Penutup / Penegasan Ulang</button>
+            </div>
+        </div>
+
+        <!-- 3. QUEST 2: THE ORDER OF LOGIC -->
+        <div id="screen-lvl2" class="screen">
+            <h2>[ QUEST 2: THE ORDER OF LOGIC ]</h2>
+            <p><strong>Misi: Prosedur Pengurusan Paspor Internasional</strong><br>Urutan mantra ritual ini diacak oleh monster! Klik kalimat di bawah secara runtut dari tahap 1 sampai 5 agar mantra aktif.</p>
+            <ul id="lvl2-list" class="sortable-list">
+                <!-- Diisi otomatis oleh JS -->
+            </ul>
+            <button class="btn" onclick="checkLvl2()">Eksekusi Urutan</button>
+        </div>
+
+        <!-- 4. QUEST 3: LINGUISTIC SHADOWS -->
+        <div id="screen-lvl3" class="screen">
+            <h2>[ QUEST 3: LINGUISTIC SHADOWS ]</h2>
+            <p>Ekstrak inti energi kebahasaan! Klasifikasikan kata sihir di bawah ini ke jenis ciri kebahasaan prosedur kompleks yang tepat.</p>
+            <div id="lvl3-word" class="word-display">KATA</div>
+            <div class="options-grid">
+                <button class="btn" onclick="checkLvl3('Imperatif')">Kata Kerja Imperatif</button>
+                <button class="btn" onclick="checkLvl3('Temporal')">Konjungsi Temporal</button>
+            </div>
+        </div>
+
+        <!-- 5. FINAL STATUS EVALUATION -->
+        <div id="screen-end" class="screen">
+            <h1>[ EVALUASI AKHIR SYSTEM ]</h1>
+            <p style="color: var(--text-gray);">Ritual pembersihan Dungeon selesai. System mengalkulasi seluruh Mana EXP kamu...</p>
+            <h2>TOTAL MANA EXP: <span id="final-score">0</span></h2>
+            <div id="evaluation-text" style="font-size: 1.4rem; font-weight: bold; margin: 25px 0; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.3);"></div>
+            <button class="btn" onclick="resetGame()">Masuki Dungeon Lagi</button>
+        </div>
+
+        <!-- System Notification Area -->
+        <div id="feedback-area" class="feedback"></div>
